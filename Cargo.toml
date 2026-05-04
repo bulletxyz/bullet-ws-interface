@@ -2,6 +2,13 @@
 name = "bullet-ws-interface"
 version = "0.1.0"
 edition = "2024"
+license = "MIT"
+description = "WebSocket message types for the Bullet trading API."
+homepage = "https://www.bullet.xyz"
+repository = "https://github.com/bulletxyz/bullet-ws-interface"
+readme = "README.md"
+keywords = ["websocket", "trading", "bullet"]
+categories = ["api-bindings", "encoding"]
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }
