@@ -1,0 +1,23 @@
+src/lib.rs
+  s_e092f00af2f9c0::t_f429959dce8d57 9,15
+Cargo.toml
+  s_e092f00af2f9c0::t_72ca8550f711ea 3
+src/response.rs
+  s_e092f00af2f9c0::t_8e252b836acd0f 1-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "b46b93f411f13d881e6f19c5d7ee283ca0da26b7",
+  "prompts": {},
+  "sessions": {
+    "s_e092f00af2f9c0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f0684410-1b1e-4d58-8fa8-602727a5ac28",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Tristan <34117851+0xtristan@users.noreply.github.com>"
+    }
+  }
+}
