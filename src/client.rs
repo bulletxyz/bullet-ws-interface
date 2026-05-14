@@ -35,29 +35,17 @@ pub enum ClientMessage {
 
     /// Place an order via the rollup WebSocket
     #[serde(alias = "order.place", rename = "ORDER.PLACE")]
-    OrderPlace {
-        id: Option<RequestId>,
-        params: OrderParams,
-    },
+    OrderPlace { id: Option<RequestId>, params: OrderParams },
 
     /// Cancel an order via the rollup WebSocket
     #[serde(alias = "order.cancel", rename = "ORDER.CANCEL")]
-    OrderCancel {
-        id: Option<RequestId>,
-        params: OrderParams,
-    },
+    OrderCancel { id: Option<RequestId>, params: OrderParams },
 
     /// Amend an order via the rollup WebSocket
     #[serde(alias = "order.amend", alias = "order.modify", rename = "ORDER.AMEND")]
-    OrderAmend {
-        id: Option<RequestId>,
-        params: OrderParams,
-    },
+    OrderAmend { id: Option<RequestId>, params: OrderParams },
 
     /// Cancel all open orders via the rollup WebSocket
     #[serde(alias = "order.cancelAll", rename = "ORDER.CANCEL_ALL")]
-    OrderCancelAll {
-        id: Option<RequestId>,
-        params: OrderParams,
-    },
+    OrderCancelAll { id: Option<RequestId>, params: OrderParams },
 }

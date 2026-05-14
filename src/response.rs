@@ -97,8 +97,7 @@ mod tests {
     #[test]
     fn optional_vec_fields_absent() {
         // cancelAll acks commonly omit client_order_ids.
-        let json =
-            r#"{"id":1,"E":1706745600000000,"results":{"tx_id":"0x2","status":"processed","order_ids":[5]}}"#;
+        let json = r#"{"id":1,"E":1706745600000000,"results":{"tx_id":"0x2","status":"processed","order_ids":[5]}}"#;
         let msg: OrderResultMessage = serde_json::from_str(json).unwrap();
         assert!(msg.results.client_order_ids.is_empty());
     }

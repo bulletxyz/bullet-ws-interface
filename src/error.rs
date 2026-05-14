@@ -143,20 +143,12 @@ impl std::fmt::Display for WSError {
 impl WSError {
     /// Create error with default message from code
     pub fn new(code: ErrorCode) -> Self {
-        Self {
-            code,
-            message: code.to_string(),
-            param: None,
-        }
+        Self { code, message: code.to_string(), param: None }
     }
 
     /// Create error with custom message
     pub fn with_message(code: ErrorCode, message: impl Into<String>) -> Self {
-        Self {
-            code,
-            message: message.into(),
-            param: None,
-        }
+        Self { code, message: message.into(), param: None }
     }
 
     /// Create error with param context (for atomic batch failures)
@@ -165,11 +157,7 @@ impl WSError {
         param: impl Into<String>,
         message: impl Into<String>,
     ) -> Self {
-        Self {
-            code,
-            message: message.into(),
-            param: Some(param.into()),
-        }
+        Self { code, message: message.into(), param: Some(param.into()) }
     }
 
     /// Get the error code
@@ -209,11 +197,7 @@ impl WSError {
     }
 
     pub fn symbol_not_found(symbol: &str) -> Self {
-        Self::with_param(
-            ErrorCode::InvalidSymbol,
-            symbol,
-            format!("symbol not found: {symbol}"),
-        )
+        Self::with_param(ErrorCode::InvalidSymbol, symbol, format!("symbol not found: {symbol}"))
     }
 
     pub fn unauthorized(msg: impl Into<String>) -> Self {
@@ -225,11 +209,7 @@ impl WSError {
     }
 
     pub fn subscription_exists(param: impl Into<String>) -> Self {
-        Self::with_param(
-            ErrorCode::SubscriptionExists,
-            param,
-            "subscription already exists",
-        )
+        Self::with_param(ErrorCode::SubscriptionExists, param, "subscription already exists")
     }
 
     pub fn mandatory_param_missing(msg: impl Into<String>) -> Self {
