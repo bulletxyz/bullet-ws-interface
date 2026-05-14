@@ -1,3 +1,6 @@
+//! Server response types for order RPC acks (`order.place`, `order.cancel`,
+//! `order.amend`, `order.cancelAll`).
+
 use serde::{Deserialize, Serialize};
 
 use crate::RequestId;
@@ -51,10 +54,62 @@ pub struct OrderResultPayload {
 /// `order.cancelAll` RPCs. Correlate to the originating request via [`id`].
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct OrderResultMessage {
-    #[serde(default)]
     pub id: Option<RequestId>,
     /// Event time (µs).
     #[serde(rename = "E")]
     pub event_time: u64,
     pub results: OrderResultPayload,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn round_trip_full_payload() {
+        let json = r#"{
+            "id": 42,
+            "E": 1706745600000000,
+            "results": {
+                "tx_id": "0xabc123",
+                "status": "processed",
+                "order_ids": [1, 2],
+                "client_order_ids": [100, 101]
+            }
+        }"#;
+        let msg: OrderResultMessage = serde_json::from_str(json).unwrap();
+        assert_eq!(msg.id, Some(RequestId::from(42u64)));
+        assert_eq!(msg.event_time, 1_706_745_600_000_000);
+        assert_eq!(msg.results.tx_id, "0xabc123");
+        assert_eq!(msg.results.status, TxStatus::Processed);
+        assert_eq!(msg.results.order_ids, vec![1, 2]);
+        assert_eq!(msg.results.client_order_ids, vec![100, 101]);
+    }
+
+    #[test]
+    fn id_absent_defaults_to_none() {
+        // Server may omit `id` for unsolicited pushes.
+        let json = r#"{"E":1706745600000000,"results":{"tx_id":"0x1","status":"submitted"}}"#;
+        let msg: OrderResultMessage = serde_json::from_str(json).unwrap();
+        assert_eq!(msg.id, None);
+    }
+
+    #[test]
+    fn optional_vec_fields_absent() {
+        // cancelAll acks commonly omit client_order_ids.
+        let json =
+            r#"{"id":1,"E":1706745600000000,"results":{"tx_id":"0x2","status":"processed","order_ids":[5]}}"#;
+        let msg: OrderResultMessage = serde_json::from_str(json).unwrap();
+        assert!(msg.results.client_order_ids.is_empty());
+    }
+
+    #[test]
+    fn tx_status_is_success() {
+        assert!(TxStatus::Processed.is_success());
+        assert!(TxStatus::Published.is_success());
+        assert!(TxStatus::Submitted.is_success());
+        assert!(TxStatus::Finalized.is_success());
+        assert!(!TxStatus::Dropped.is_success());
+        assert!(!TxStatus::Unknown.is_success());
+    }
 }
