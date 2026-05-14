@@ -20,7 +20,8 @@ pub enum TxStatus {
     Finalized,
     /// Dropped (expired uniqueness, duplicate generation value).
     Dropped,
-    /// Status could not be determined.
+    /// Status could not be determined, or an unrecognized value was received.
+    #[serde(other)]
     Unknown,
 }
 
@@ -100,6 +101,16 @@ mod tests {
         let json = r#"{"id":1,"E":1706745600000000,"results":{"tx_id":"0x2","status":"processed","order_ids":[5]}}"#;
         let msg: OrderResultMessage = serde_json::from_str(json).unwrap();
         assert!(msg.results.client_order_ids.is_empty());
+    }
+
+    #[test]
+    fn unknown_status_is_catch_all() {
+        // Any unrecognized status string should deserialize to Unknown rather
+        // than failing — forward-compat for new sequencer statuses.
+        let json = r#"{"id":1,"E":0,"results":{"tx_id":"0x1","status":"pending"}}"#;
+        let msg: OrderResultMessage = serde_json::from_str(json).unwrap();
+        assert_eq!(msg.results.status, TxStatus::Unknown);
+        assert!(!msg.results.status.is_success());
     }
 
     #[test]
