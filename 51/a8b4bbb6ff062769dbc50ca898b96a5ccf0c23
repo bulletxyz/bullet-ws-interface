@@ -1,0 +1,24 @@
+rust-toolchain.toml
+  s_e092f00af2f9c0::t_40cad1a6961c28 1-3
+.github/workflows/pr-title.yml
+  s_e092f00af2f9c0::t_3e3893810406bc 15
+.github/workflows/ci.yml
+  s_e092f00af2f9c0::t_09142d07d2c8e8 14,17
+  s_e092f00af2f9c0::t_f29de82d929630 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "51a8b4bbb6ff062769dbc50ca898b96a5ccf0c23",
+  "prompts": {},
+  "sessions": {
+    "s_e092f00af2f9c0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f0684410-1b1e-4d58-8fa8-602727a5ac28",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Tristan <34117851+0xtristan@users.noreply.github.com>"
+    }
+  }
+}
