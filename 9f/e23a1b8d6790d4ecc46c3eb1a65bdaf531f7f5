@@ -1,0 +1,19 @@
+src/server.rs
+  s_a068e3425f46f9::t_5f551abf8e71b3 437-503
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "9fe23a1b8d6790d4ecc46c3eb1a65bdaf531f7f5",
+  "prompts": {},
+  "sessions": {
+    "s_a068e3425f46f9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e66d48ef-4a95-4429-911e-330dbd877c07",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Tristan <34117851+0xtristan@users.noreply.github.com>"
+    }
+  }
+}
