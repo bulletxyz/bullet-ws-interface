@@ -428,7 +428,9 @@ pub struct TradeFillData {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(untagged)]
 pub enum OrderUpdateData {
-    TradeFill(TradeFillData),
+    /// Boxed because `TradeFillData` is much larger than the other variants
+    /// (clippy::large_enum_variant); matches trading-api's wrapping.
+    TradeFill(Box<TradeFillData>),
     PlaceOrder(PlaceOrderData),
     Cancel(CancelOrderData),
 }
