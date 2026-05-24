@@ -434,3 +434,70 @@ pub enum OrderUpdateData {
     PlaceOrder(PlaceOrderData),
     Cancel(CancelOrderData),
 }
+
+#[cfg(test)]
+mod wire_format_tests {
+    //! Regression tests pinning each server message type to the actual JSON
+    //! shape captured live from `tradingapi.testnet.bullet.xyz` (2026-05-24).
+    //! If trading-api changes its wire format, these break here first.
+
+    use super::*;
+
+    #[test]
+    fn subscribe_ok_round_trips_wire_payload() {
+        let wire = r#"{"e":"subscribe","id":1,"E":1779600272876932,"result":"success"}"#;
+        let parsed: MethodResult = serde_json::from_str(wire).expect("MethodResult deserializes");
+        assert_eq!(parsed.id, Some(RequestId::from(1)));
+        assert_eq!(parsed.event_time, 1779600272876932);
+        assert_eq!(parsed.result, "success");
+    }
+
+    #[test]
+    fn list_subscriptions_round_trips_wire_payload() {
+        let wire = r#"{"e":"list_subscriptions","id":2,"E":1779600273218722,"result":["ETH-USD@aggTrade","BTC-USD@bookTicker"]}"#;
+        let parsed: ListSubscriptionsMessage =
+            serde_json::from_str(wire).expect("ListSubscriptionsMessage deserializes");
+        assert_eq!(parsed.id, Some(RequestId::from(2)));
+        assert_eq!(parsed.event_time, 1779600273218722);
+        assert_eq!(
+            parsed.result,
+            vec!["ETH-USD@aggTrade".to_string(), "BTC-USD@bookTicker".to_string()]
+        );
+    }
+
+    #[test]
+    fn trade_fill_round_trips_wire_payload() {
+        let wire = r#"{"s":"SOL-USD","i":183696108,"X":"FILLED","x":"TRADE","T":1779598581565646,"th":"0x44dd","ua":"","S":"BUY","ap":"85.96","l":"0.1","L":"85.96","n":"0.00275072","N":"USDC","m":false,"t":13196983,"rp":"-0.0156","ft":"o","z":"0.1","Z":"8.596","rs":"0"}"#;
+        let parsed: TradeFillData =
+            serde_json::from_str(wire).expect("TradeFillData deserializes");
+        assert_eq!(parsed.common.symbol, "SOL-USD");
+        assert_eq!(parsed.common.order_id, 183696108);
+        assert_eq!(parsed.common.status, "FILLED");
+        assert_eq!(parsed.common.execution_type, "TRADE");
+        assert_eq!(parsed.common.user_address.as_deref(), Some(""));
+        assert_eq!(parsed.side, "BUY");
+        assert_eq!(parsed.avg_price.as_deref(), Some("85.96"));
+        assert_eq!(parsed.last_filled_qty, "0.1");
+        assert_eq!(parsed.last_filled_price, "85.96");
+        assert_eq!(parsed.commission, "0.00275072");
+        assert_eq!(parsed.commission_asset, "USDC");
+        assert!(!parsed.is_maker);
+        assert_eq!(parsed.trade_id, 13196983);
+        assert_eq!(parsed.realized_pnl, "-0.0156");
+        assert_eq!(parsed.fill_type.as_deref(), Some("o"));
+        assert_eq!(parsed.cumulative_filled_size.as_deref(), Some("0.1"));
+        assert_eq!(parsed.cumulative_filled_cot.as_deref(), Some("8.596"));
+        assert_eq!(parsed.remaining_size.as_deref(), Some("0"));
+    }
+
+    #[test]
+    fn trade_fill_in_order_update_data() {
+        let wire = r#"{"s":"SOL-USD","i":1,"X":"FILLED","x":"TRADE","T":1,"th":"0x","S":"BUY","l":"0.1","L":"85","n":"0","N":"USDC","m":false,"t":1,"rp":"0"}"#;
+        let parsed: OrderUpdateData =
+            serde_json::from_str(wire).expect("untagged variant resolves to TradeFill");
+        match parsed {
+            OrderUpdateData::TradeFill(_) => {}
+            other => panic!("expected TradeFill, got {other:?}"),
+        }
+    }
+}
