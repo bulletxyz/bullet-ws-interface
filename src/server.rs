@@ -468,8 +468,7 @@ mod wire_format_tests {
     #[test]
     fn trade_fill_round_trips_wire_payload() {
         let wire = r#"{"s":"SOL-USD","i":183696108,"X":"FILLED","x":"TRADE","T":1779598581565646,"th":"0x44dd","ua":"","S":"BUY","ap":"85.96","l":"0.1","L":"85.96","n":"0.00275072","N":"USDC","m":false,"t":13196983,"rp":"-0.0156","ft":"o","z":"0.1","Z":"8.596","rs":"0"}"#;
-        let parsed: TradeFillData =
-            serde_json::from_str(wire).expect("TradeFillData deserializes");
+        let parsed: TradeFillData = serde_json::from_str(wire).expect("TradeFillData deserializes");
         assert_eq!(parsed.common.symbol, "SOL-USD");
         assert_eq!(parsed.common.order_id, 183696108);
         assert_eq!(parsed.common.status, "FILLED");
