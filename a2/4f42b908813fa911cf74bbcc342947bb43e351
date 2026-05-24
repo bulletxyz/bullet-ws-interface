@@ -1,0 +1,22 @@
+src/server.rs
+  s_a068e3425f46f9::t_fbd27569b5697e 62-98
+  s_a068e3425f46f9::t_80012017abdcd7 144-149,172,175-200,202-216
+  s_a068e3425f46f9::t_7c195b0014dc94 373-378,385,387-390,398-424
+  s_a068e3425f46f9::t_aeabe0d1576a00 342-346
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "a24f42b908813fa911cf74bbcc342947bb43e351",
+  "prompts": {},
+  "sessions": {
+    "s_a068e3425f46f9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e66d48ef-4a95-4429-911e-330dbd877c07",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Tristan <34117851+0xtristan@users.noreply.github.com>"
+    }
+  }
+}
