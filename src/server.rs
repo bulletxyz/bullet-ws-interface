@@ -491,6 +491,34 @@ mod wire_format_tests {
     }
 
     #[test]
+    fn agg_trade_round_trips_wire_payload() {
+        // Captured live from tradingapi.testnet.bullet.xyz @aggTrade.
+        // Per the 2026-05-23 changelog the DEX-specific fields are emitted as
+        // empty/zero placeholders — present on the wire, not omitted. Our
+        // `Option<T>` wrap with `default` correctly deserializes these as
+        // `Some(emptyvalue)`, confirming the placeholders parse without error.
+        let wire = r#"{"e":"aggTrade","E":1779600413218736,"s":"SOL-USD","a":13205413,"p":"85.65","q":"0.01","f":13205413,"l":13205413,"T":1779600413211110,"m":true,"th":"0x94764a","ua":"","oi":0,"mk":false,"ff":false,"lq":false,"fe":"0","nf":"0","fa":"","co":0,"sd":"","ft":"","z":"0","Z":"0","rs":"0"}"#;
+        let parsed: AggTradeMessage =
+            serde_json::from_str(wire).expect("AggTradeMessage deserializes");
+        // Non-deprecated fields populated:
+        assert_eq!(parsed.symbol, "SOL-USD");
+        assert_eq!(parsed.price, "85.65");
+        assert_eq!(parsed.quantity, "0.01");
+        assert!(parsed.is_buyer_maker);
+        assert_eq!(parsed.tx_hash, "0x94764a");
+        // Deprecated placeholders: present-but-meaningless. The point of these
+        // assertions is to verify the empty/zero placeholders deserialize
+        // without error, not that the values are useful.
+        assert_eq!(parsed.user_address.as_deref(), Some(""));
+        assert_eq!(parsed.order_id, Some(0));
+        assert_eq!(parsed.is_maker, Some(false));
+        assert_eq!(parsed.is_full_fill, Some(false));
+        assert_eq!(parsed.fill_type.as_deref(), Some(""));
+        assert_eq!(parsed.cumulative_filled_size.as_deref(), Some("0"));
+        assert_eq!(parsed.remaining_size.as_deref(), Some("0"));
+    }
+
+    #[test]
     fn trade_fill_in_order_update_data() {
         let wire = r#"{"s":"SOL-USD","i":1,"X":"FILLED","x":"TRADE","T":1,"th":"0x","S":"BUY","l":"0.1","L":"85","n":"0","N":"USDC","m":false,"t":1,"rp":"0"}"#;
         let parsed: OrderUpdateData =
