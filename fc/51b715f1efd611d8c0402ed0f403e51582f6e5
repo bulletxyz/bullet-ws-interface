@@ -1,0 +1,25 @@
+src/response.rs
+  s_8ce88d52ef9b3a::t_2f4e8e8572f055 54-55
+  s_8ce88d52ef9b3a::t_107605fc372886 1-2
+src/client.rs
+  s_8ce88d52ef9b3a::t_f100c027e8fe7a 5,7
+  s_8ce88d52ef9b3a::t_9fef9146a47ac5 36-44
+  s_8ce88d52ef9b3a::t_c2abe8d436c561 52-53,55,58,62-63,65
+  s_8ce88d52ef9b3a::t_bbed9443117f5a 47-49,51,54,56-57,59,61,64,66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "fc51b715f1efd611d8c0402ed0f403e51582f6e5",
+  "prompts": {},
+  "sessions": {
+    "s_8ce88d52ef9b3a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d9bb3f41-37f0-426a-82e7-57f2ef7abca5",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": null
+    }
+  }
+}
