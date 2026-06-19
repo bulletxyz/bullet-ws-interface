@@ -19,6 +19,10 @@ pub struct OrderParams {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 #[serde(tag = "method", rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ClientMessage {
+    /// Subscribe to market data topics or user data streams
+    /// possible errors: ValidationError, TooManyRequests, InvalidSubscriptionFormat, Unauthorized,
+    /// InvalidSymbol, ClientNotFound server responses: ServerMessageKind::Subscribe (success),
+    /// ServerMessageKind::Error (failure)
     #[serde(alias = "subscribe")]
     Subscribe {
         id: Option<RequestId>,
@@ -26,6 +30,10 @@ pub enum ClientMessage {
         params: Vec<String>,
     },
 
+    /// Unsubscribe from market data topics or user data streams
+    /// possible errors: ValidationError (message parse)
+    /// server responses: ServerMessageKind::Unsubscribe (success, idempotent - invalid topics
+    /// silently skipped)
     #[serde(alias = "unsubscribe")]
     Unsubscribe {
         id: Option<RequestId>,
@@ -33,9 +41,15 @@ pub enum ClientMessage {
         params: Vec<String>,
     },
 
+    /// List all active subscriptions for the client
+    /// possible errors: ValidationError (message parse)
+    /// server responses: ServerMessageKind::ListSubscriptions (success)
     #[serde(alias = "list_subscriptions")]
     ListSubscriptions { id: Option<RequestId> },
 
+    /// Ping the server to check connection health
+    /// possible errors: ValidationError (message parse)
+    /// server responses: ServerMessageKind::Pong (success)
     #[serde(alias = "ping")]
     Ping { id: Option<RequestId> },
 
