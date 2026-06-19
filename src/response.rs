@@ -1,5 +1,6 @@
-//! Server response types for order RPC acks (`order.place`, `order.cancel`,
-//! `order.amend`, `order.cancelAll`).
+//! Server response types for the order RPC ack — the result of submitting a
+//! signed order transaction over the rollup WebSocket (the `SUBMIT` method, or
+//! the deprecated per-action `order.*` methods).
 
 use serde::{Deserialize, Serialize};
 
@@ -51,8 +52,8 @@ pub struct OrderResultPayload {
     pub client_order_ids: Vec<u64>,
 }
 
-/// Result message for `order.place` / `order.cancel` / `order.amend` /
-/// `order.cancelAll` RPCs. Correlate to the originating request via [`id`].
+/// Result message for an order-submission RPC (`SUBMIT`, or the deprecated
+/// `order.*` methods). Correlate to the originating request via [`id`].
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct OrderResultMessage {
     pub id: Option<RequestId>,
